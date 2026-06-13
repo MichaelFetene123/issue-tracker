@@ -10,6 +10,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert'
 import { z } from 'zod'
 import {zodResolver} from '@hookform/resolvers/zod';
 import { createIssueSchema } from '@/app/validationSchema'
+import ErrorMessage from '@/app/components/ErrorMessage'
 
 import "easymde/dist/easymde.min.css";
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), { ssr: false });
@@ -33,18 +34,22 @@ export default function newIssuePage() {
     };
   return (
    <div className='max-w-xl '>
-    {error && (<Alert variant="destructive" className='mb-5'>
+    {error && (<Alert variant="destructive" aria-invalid={true} className='mb-5'>
       <AlertDescription>{error}</AlertDescription>
     </Alert>)}
      <form onSubmit={handleSubmit(submitHandler)} className='space-y-3'>
       <Input placeholder="Title" {...register('title')} />
-      {  errors.title && <Alert variant="destructive">{errors.title.message}</Alert>}
+      <ErrorMessage>
+        {errors.title?.message}
+        </ErrorMessage>
      < Controller
       name='description'
        control={control} 
        render={({ field }) => <SimpleMDE {...field}  placeholder='Description'/>}
       />
-      {errors.description &&  <Alert variant="destructive">{errors.description.message}</Alert>}
+     <ErrorMessage>
+        {errors.description?.message}
+        </ErrorMessage>
       <Button>Submit New Issue</Button>
     </form>
     </div>
