@@ -7,7 +7,7 @@ export default function IssuesPage() {
     <div>
         <h2>Issue Page</h2>
         <div>
-            <Button><Link href="/">Dashboard</Link></Button>
+            <Button><Link href="/issues/new">New Issue</Link></Button>
         </div>
     </div>
 

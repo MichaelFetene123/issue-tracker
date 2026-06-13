@@ -35,7 +35,7 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased ${inter.variable}`}
       suppressHydrationWarning
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">
+      <body className="min-h-full flex flex-col bg-background text-foreground ">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
@@ -43,7 +43,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <NavBar />
-          {children}
+          <main className="p-5">{children}</main>
         </ThemeProvider>
       </body>
     </html>
