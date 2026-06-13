@@ -32,7 +32,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased ${inter.variable}`}
+      className={` h-full antialiased ${inter.variable}`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-background text-foreground ">
