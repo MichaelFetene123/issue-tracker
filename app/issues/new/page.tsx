@@ -6,19 +6,21 @@ import dynamic from 'next/dynamic'
 import { useForm, Controller } from 'react-hook-form'
 import axios from 'axios'
 import { useRouter } from 'next/navigation'
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { z } from 'zod'
+import {zodResolver} from '@hookform/resolvers/zod';
+import { createIssueSchema } from '@/app/validationSchema'
 
 import "easymde/dist/easymde.min.css";
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), { ssr: false });
 
-interface FormData {
-  title: string;
-  description: string;  
-}
+type  FormData = z.infer<typeof createIssueSchema>
 
 export default function newIssuePage() {
     const router = useRouter();
-    const { register, control, handleSubmit } = useForm<FormData>();
+    const { register, control, handleSubmit, formState: {errors} } = useForm<FormData>({
+        resolver: zodResolver(createIssueSchema)
+    });
     const [error, setError] = useState<string>('');
 
     const  submitHandler = async (data: FormData) => {
@@ -26,18 +28,7 @@ export default function newIssuePage() {
          await axios.post('/api/issues', data)
         router.push('/issues')
        } catch (error) {
-         if (axios.isAxiosError(error) && error.response?.status === 400) {
-           const validationErrors = error.response.data;
-           if (validationErrors.title?._errors?.[0]) {
-             setError(validationErrors.title._errors[0]);
-           } else if (validationErrors.description?._errors?.[0]) {
-             setError(validationErrors.description._errors[0]);
-           } else {
-             setError('Validation failed. Please check your inputs.');
-           }
-         } else {
-           setError('Unexpected error occured.');
-         }
+        setError('Unexpected error occured.')
        }
     };
   return (
@@ -47,11 +38,13 @@ export default function newIssuePage() {
     </Alert>)}
      <form onSubmit={handleSubmit(submitHandler)} className='space-y-3'>
       <Input placeholder="Title" {...register('title')} />
+      {  errors.title && <Alert variant="destructive">{errors.title.message}</Alert>}
      < Controller
       name='description'
        control={control} 
        render={({ field }) => <SimpleMDE {...field}  placeholder='Description'/>}
       />
+      {errors.description &&  <Alert variant="destructive">{errors.description.message}</Alert>}
       <Button>Submit New Issue</Button>
     </form>
     </div>
