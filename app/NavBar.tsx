@@ -4,6 +4,7 @@ import React from "react";
 import { AiFillBug } from "react-icons/ai";
 import { usePathname } from "next/navigation";
 import classnames from "classnames";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function NavBar() {
   const links = [
@@ -34,6 +35,7 @@ export default function NavBar() {
           </li>
         ))}
       </ul>
+      <ThemeToggle />
     </nav>
   );
 }
